@@ -52,82 +52,61 @@ def print_graphs():
   pyplot.show()
 
 
-def training_matrix(k):
-  tmpx = x
-  tmpy = y
-
-  rnd = numpy.arange(N)
-  numpy.random.shuffle(rnd)
-  print N/k
-  for i in range(0, (N/k)):
-    print rnd[i]
-    tmpx = numpy.delete(tmpx, rnd[i])
-    tmpy = numpy.delete(tmpy, rnd[i])
-
-  print len(tmpx)
-  print len(tmpy)
-  return tmpx, tmpy
-
-
 def main():
   load_data()
   
   K = 10
-
-  matrix = enrichissement(x, 1)
-  test = numpy.split(x, K)
-
-  print numpy.concatenate(test)
-  print len(numpy.concatenate(test))
-
-  """matrix = enrichissement(x, 1)
-  theta = calc_theta(matrix)
-  error = j_theta(matrix, y, theta)
-  print "Ordre: 1"
-  print "Theta: ", theta
+  i = 1
+  
+  print "Ordre: ", i
+  error = 0
+  for part in range(0, K):
+    matrix_x = numpy.split(x, K)
+    matrix_y = numpy.split(y, K)
+  
+    matrix_x.pop(part)
+    matrix_y.pop(part)
+  
+    numpy.concatenate(matrix_x)
+    numpy.concatenate(matrix_y)
+    
+    matrix_x = numpy.array(matrix_x)
+    matrix_y = numpy.array(matrix_y)
+    
+    print matrix_x
+    print matrix_y
+      
+    theta = calc_theta(matrix_x)
+    error = error + j_theta(matrix_x, matrix_y, theta)
+    
+  error = (error / K)
   print "Erreur: ", error
-
-  matrix = enrichissement(x, 10)
-  theta = calc_theta(matrix)
-  error = j_theta(matrix, y, theta)
-  print "Ordre: 10"
-  print "Theta: ", theta
-  print "Erreur: ", error
-
-  matrix = enrichissement(x, 20)
-  theta = calc_theta(matrix)
-  error = j_theta(matrix, y, theta)
-  print "Ordre: 20"
-  print "Theta: ", theta
-  print "Erreur: ", error
-
-  matrix = enrichissement(x, 23)
-  theta = calc_theta(matrix)
-  error = j_theta(matrix, y, theta)
-  print "Ordre: 23"
-  print "Theta: ", theta
-  print "Erreur: ", error
-
-  matrix = enrichissement(x, 25)
-  theta = calc_theta(matrix)
-  error = j_theta(matrix, y, theta)
-  print "Ordre: 25"
-  print "Theta: ", theta
-  print "Erreur: ", error"""
-
-  """K = 10
-  ordre = 1
-  diff = 1
+  diff = error
+  
   while(diff > 0):
-    matrix = enrichissement(x, ordre)
-    for i in range(0, 10):
-      tx, ty = training_matrix(K)
-      theta = theta(training)
-      error = j_theta(training, y, theta)
-      diff = error - diff"""
-
-  #matrix = enrichissement(x, 1)
-  #theta = theta(matrix)
+    i = i + 1
+    print "Ordre: ", i
+    error = 0
+    for part in range(0, K):
+      matrix_x = numpy.split(x, K)
+      matrix_y = numpy.split(y, K)
+  
+      matrix_x.pop(part)
+      matrix_y.pop(part)
+  
+      numpy.concatenate(matrix_x)
+      numpy.concatenate(matrix_y)
+      
+      matrix_x = numpy.array(matrix_x)
+      matrix_y = numpy.array(matrix_y)
+      
+      theta = calc_theta(matrix_x)
+      error = error + j_theta(matrix_x, matrix_y, theta)
+    
+    error = (error / K)
+    print "Erreur: ", error
+    diff = diff - error
+    print "Diff: ", diff
 
   #print "Matrice: \n", enrichissement(x, 10)
   #print "Theta: ", theta(enrichissement(x, 10))
