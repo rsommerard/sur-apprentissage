@@ -12,8 +12,8 @@ def load_data():
   y = numpy.loadtxt('data/y_C3.txt')
 
 
-def calc_theta(a):
-  return numpy.dot(numpy.linalg.inv(numpy.dot(a, a.T)), numpy.dot(a, y))
+def calc_theta(a, b):
+  return numpy.dot(numpy.linalg.inv(numpy.dot(a, a.T)), numpy.dot(a, b))
 
 
 def f_theta(matrix, theta):
@@ -26,10 +26,10 @@ def j_theta(a, b, theta):
 
 
 def enrichissement(matrix, ordre):
-  tmp = numpy.vstack((numpy.ones(N), matrix))
+  tmp = numpy.vstack((numpy.ones(len(matrix)), matrix))
   
   if ordre == 0:
-    return numpy.ones(N)
+    return numpy.ones(len(matrix))
     
   if ordre == 1:
     return tmp
@@ -40,10 +40,11 @@ def enrichissement(matrix, ordre):
   return tmp
 
 
-def print_graphs():
+def print_graphs(i):
+  lab = "Polynome d'ordre " + str(i)
   pyplot.figure(1)
-  pyplot.plot(x, y, '.')
-  pyplot.plot(x, f_theta(enrichissement(x, 10), theta(enrichissement(x, 10))), '.')
+  pyplot.plot(x, y, '.', label="Data")
+  pyplot.plot(x, f_theta(enrichissement(x, i), calc_theta(enrichissement(x, i), y)), 'r .', label=lab)
   pyplot.legend()
   pyplot.grid(True)
   pyplot.ylabel('y')
@@ -67,23 +68,23 @@ def main():
     matrix_x.pop(part)
     matrix_y.pop(part)
   
-    numpy.concatenate(matrix_x)
-    numpy.concatenate(matrix_y)
+    matrix_x = numpy.concatenate(matrix_x)
+    matrix_y = numpy.concatenate(matrix_y)
     
     matrix_x = numpy.array(matrix_x)
     matrix_y = numpy.array(matrix_y)
-    
-    print matrix_x
-    print matrix_y
+
+    matrix_x = enrichissement(matrix_x, i)
       
-    theta = calc_theta(matrix_x)
+    theta = calc_theta(matrix_x, matrix_y)
     error = error + j_theta(matrix_x, matrix_y, theta)
     
   error = (error / K)
   print "Erreur: ", error
-  diff = error
+  previous_error = error + 1
   
-  while(diff > 0):
+  while(previous_error > error):
+    previous_error = error
     i = i + 1
     print "Ordre: ", i
     error = 0
@@ -94,23 +95,24 @@ def main():
       matrix_x.pop(part)
       matrix_y.pop(part)
   
-      numpy.concatenate(matrix_x)
-      numpy.concatenate(matrix_y)
+      matrix_x = numpy.concatenate(matrix_x)
+      matrix_y = numpy.concatenate(matrix_y)
       
       matrix_x = numpy.array(matrix_x)
       matrix_y = numpy.array(matrix_y)
+
+      matrix_x = enrichissement(matrix_x, i)
       
-      theta = calc_theta(matrix_x)
+      theta = calc_theta(matrix_x, matrix_y)
       error = error + j_theta(matrix_x, matrix_y, theta)
     
     error = (error / K)
     print "Erreur: ", error
-    diff = diff - error
-    print "Diff: ", diff
 
-  #print "Matrice: \n", enrichissement(x, 10)
-  #print "Theta: ", theta(enrichissement(x, 10))
-  #print_graphs()
+  print "Meilleur erreur: ", previous_error
+  print "Meilleur polynome d'ordre: ", (i-1)
+  
+  print_graphs((i-1))
 
 
 if __name__ == '__main__':
