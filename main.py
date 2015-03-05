@@ -74,6 +74,8 @@ def main():
 
   print 'FAA - TP3: Sur-apprentissage'
   print '-' * 80
+  print 'Nombre de données: {0}'.format(N)
+  print '-' * 80
 
   K = 10
   i = 1
@@ -124,8 +126,8 @@ def main():
 
     error = (error / K)
 
-  print "Cross validation pour déterminer le rang: "
-  print "    - Meilleur erreur: ", previous_error
+  print "Cross validation: "
+  print "    - Meilleur erreur (plus faible): ", previous_error
   print "    - Meilleur polynome d'ordre: ", (i-1)
   print '-' * 80
 
