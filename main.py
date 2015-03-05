@@ -60,6 +60,7 @@ def print_graphs(i):
   pyplot.plot(x, f_theta(enrichissement(x, 30), calc_theta(enrichissement(x, 30), y)), 'g .', label="P. d'ordre 30")
   pyplot.legend()
   pyplot.grid(True)
+  pyplot.title('Polynome (meilleur en rouge)')
   pyplot.ylabel('y')
   pyplot.xlabel('x')
 
